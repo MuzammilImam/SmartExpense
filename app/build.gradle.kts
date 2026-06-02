@@ -103,6 +103,9 @@ dependencies {
 
     //extended icons
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
+    implementation("androidx.compose.material3:material3-window-size-class-android:1.1.0")
+
+    implementation("androidx.core:core-splashscreen:1.0.1")
 
     
 }

@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">SmartExpense</string>
+    <string name="NavHome">Home</string>
+    <string name="NavAnalytics">Analytics</string>
+    <string name="NavBudget">Budget</string>
+    <string name="NavCategories">Category</string>
+    <string name="NavSettings">Settings</string>
 </resources>
