@@ -61,48 +61,24 @@ import com.comforttech.smartexpense.ui.theme.colorpurple
 @Composable
 fun Dashboard(navigationManager: NavigationManager) {
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        bottomBar = {
-            BottomBar()
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = { /*TODO*/ },
-                containerColor = colorBlue
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = null,
-                    tint = Color.White
-                )
-            }
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF3F3F8))){
+
+        item {
+
+            HeaderSection()
         }
 
-
-    ) {
-        padding->
-
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-                .background(Color(0xFFF3F3F8))){
-
-            item {
-
-                HeaderSection()
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-                InsightSetion()
-            }
-
+        item {
+            Spacer(modifier = Modifier.height(16.dp))
+            InsightSetion()
         }
-
 
     }
+
+
 }
 
 @Composable
@@ -243,79 +219,6 @@ fun InsightSetion(){
 
 }
 
-@Composable
-fun BottomBar(){
-
-      val home = stringResource(R.string.NavHome)
-      val analytics= stringResource(R.string.NavAnalytics)
-      val budget = stringResource(R.string.NavBudget)
-      val categories = stringResource(R.string.NavCategories)
-      val settings = stringResource(R.string.NavSettings)
-
-
-    val navItemList  = listOf(
-        NavItem(home,Icons.Default.Home),
-        NavItem(analytics,Icons.Default.BarChart),
-        NavItem(budget,Icons.Default.AccountBalanceWallet),
-        NavItem(categories,Icons.Default.Category),
-        NavItem(settings,Icons.Default.Settings)
-    )
-
-
-    var selectedIndex by remember {
-        mutableIntStateOf(0)
-    }
-
-    NavigationBar {
-
-        navItemList.forEachIndexed { index, navItem ->
-           /* NavigationBarItem(
-                selected = true,
-                onClick = { *//*TODO*//* },
-                icon = { Icon(Icons.Default.Home, null) },
-                label = { Text(text = home) }
-            )
-
-            NavigationBarItem(
-                selected = false,
-                onClick = { *//*TODO*//* },
-                icon = { Icon(Icons.Default.BarChart, null) },
-                label = { Text(text = analytics) }
-            )
-
-            NavigationBarItem(
-                selected = false,
-                onClick = { *//*TODO*//* },
-                icon = { Icon(Icons.Default.AccountBalanceWallet, null) },
-                label = { Text(text = budget) }
-            )
-
-            NavigationBarItem(
-                selected = false,
-                onClick = { *//*TODO*//* },
-                icon = { Icon(Icons.Default.Category, null) },
-                label = { Text(text = categories) }
-            )
-
-            NavigationBarItem(
-                selected = false,
-                onClick = { *//*TODO*//* },
-                icon = { Icon(Icons.Default.Settings, null) },
-                label = { Text(text = settings) }
-            )
-*/
-
-            NavigationBarItem(selected = selectedIndex == index,
-                onClick = { selectedIndex = index},
-                icon = { Icon(imageVector = navItem.icon , contentDescription = null) },
-                label = {
-                    Text(text = navItem.label)
-                }
-            )
-
-        }
-    }
-}
 
 
 

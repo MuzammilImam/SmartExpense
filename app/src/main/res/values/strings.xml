@@ -5,4 +5,9 @@
     <string name="NavBudget">Budget</string>
     <string name="NavCategories">Category</string>
     <string name="NavSettings">Settings</string>
+    <string name="Back">Back</string>
+    <string name="AddExpense">Add expense</string>
+    <string name="Amount">Amount</string>
+    <string name="category">Category</string>
+
 </resources>

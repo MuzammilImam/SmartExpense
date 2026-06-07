@@ -15,4 +15,9 @@ class NavigationManager(private val navController:NavHostController) {
           }
       }
 
+    /** navigate from fab to Adding expense screen**/
+    fun navigateToAddExpense() {
+        navController.navigate(NavigationScreen.AddExpenseScreen.routeString)
+    }
+
 }
