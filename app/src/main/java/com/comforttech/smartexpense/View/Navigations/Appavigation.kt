@@ -31,6 +31,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.comforttech.smartexpense.R
 import com.comforttech.smartexpense.View.BottomNavigation.NavItem
 import com.comforttech.smartexpense.View.Screens.AddExpense
+import com.comforttech.smartexpense.View.Screens.Analytics
 import com.comforttech.smartexpense.View.Screens.Dashboard
 import com.comforttech.smartexpense.View.Screens.Splash
 import com.comforttech.smartexpense.ui.theme.colorBlue
@@ -106,7 +107,11 @@ fun Appavigation(
             }
 
             composable(NavigationScreen.AddExpenseScreen.routeString){
-                AddExpense()
+                AddExpense(navController = navController)
+            }
+
+            composable(NavigationScreen.AnalyticsScreen.routeString){
+                Analytics()
             }
 
         }

@@ -20,4 +20,5 @@ class NavigationManager(private val navController:NavHostController) {
         navController.navigate(NavigationScreen.AddExpenseScreen.routeString)
     }
 
+
 }

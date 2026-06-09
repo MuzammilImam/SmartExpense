@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -18,7 +19,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.Icon
@@ -45,6 +48,13 @@ import androidx.compose.material.icons.outlined.MonitorHeart
 import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.material.icons.outlined.ShoppingBag
 import androidx.compose.material.icons.outlined.SportsEsports
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -54,16 +64,23 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.navigation.NavController
 import com.comforttech.smartexpense.Model.Category
+import com.comforttech.smartexpense.View.Navigations.NavigationManager
+import com.comforttech.smartexpense.ui.theme.colorWhite
 
-@Preview(showSystemUi = true)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddExpense() {
+fun AddExpense(navController: NavController) {
 
     val back = stringResource(R.string.Back)
     var amount by remember {
-        mutableStateOf("0")
+        mutableStateOf("")
+    }
+    var showBottomSheet by remember {
+        mutableStateOf(false)
     }
 
     val categoryList = listOf(
@@ -130,9 +147,10 @@ fun AddExpense() {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .fillMaxWidth()
                         .padding(start = 16.dp, top = 16.dp)
-                        .clickable { },
+                        .clickable {
+                            navController.popBackStack()
+                        },
                 ) {
 
                     Icon(
@@ -180,11 +198,17 @@ fun AddExpense() {
                     BasicTextField(
                         value = amount,
                         onValueChange = {
-                            if (it.all { c -> c.isDigit() }) amount = it
+                            if (it.all { c -> c.isDigit() && it.length<=12}) amount = it
                         },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Number
+                            keyboardType = KeyboardType.Number,
+                             imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                // Save amount here
+                            }
                         ),
                         textStyle = TextStyle(
                             textAlign = TextAlign.Center,
@@ -198,15 +222,19 @@ fun AddExpense() {
                                     .padding(top = 8.dp),
                                 contentAlignment = Alignment.Center
                             ) {
-                                if (amount.isEmpty()) {
+                                //if (amount.isEmpty()) {
                                     Text(
-                                        text = "0",
+                                        text =  if (amount.isEmpty()) "0" else amount,
                                         color = Color.White.copy(alpha = 0.5f),
                                         fontSize = 32.sp,
                                         textAlign = TextAlign.Center,
-                                        modifier = Modifier.fillMaxWidth()
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .clickable {
+                                                showBottomSheet = true
+                                            }
                                     )
-                                }
+                                //}
 
                                 innerTextField()
                             }
@@ -238,6 +266,26 @@ fun AddExpense() {
 
     }
 
+    if (showBottomSheet) {
+
+        ModalBottomSheet(
+            onDismissRequest = { showBottomSheet = false }
+        ) {
+
+            NumberPad(
+                amount = amount,
+                onChange = { newValue ->
+                    if (newValue.length <= 12) {
+                        amount = newValue
+                    }
+                },
+                onSave = {
+                    showBottomSheet = false
+                }
+            )
+        }
+    }
+
 
 }
 
@@ -264,11 +312,11 @@ fun CategoryGrid(categoryList:List<Category>) {
                     }
             ) {
 
-                Icon(
+                /*Icon(
                     imageVector = ImageVector(category.imageRes),
                     contentDescription = category.name,
                     modifier = Modifier.size(60.dp)
-                )
+                )*/
 
                 Spacer(modifier = Modifier.height(4.dp))
 
@@ -277,6 +325,114 @@ fun CategoryGrid(categoryList:List<Category>) {
                     fontSize = 12.sp
                 )
             }
+        }
+    }
+}
+
+@Composable
+fun NumberPad(
+    amount: String,
+    onChange: (String) -> Unit,
+    onSave: () -> Unit
+) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .background(colorWhite.copy(alpha = 0.4f))
+    ) {
+
+        // Row 1
+        Row(
+            Modifier.fillMaxWidth()
+           ,horizontalArrangement = Arrangement.SpaceEvenly) {
+            Key("1") { onChange(amount + "1") }
+            Key("2") { onChange(amount + "2") }
+            Key("3") { onChange(amount + "3") }
+        }
+
+        // Row 2
+        Row(
+            Modifier.fillMaxWidth()
+           ,horizontalArrangement = Arrangement.SpaceEvenly) {
+            Key("4") { onChange(amount + "4") }
+            Key("5") { onChange(amount + "5") }
+            Key("6") { onChange(amount + "6") }
+        }
+
+        // Row 3
+        Row(Modifier.fillMaxWidth()
+            ,horizontalArrangement = Arrangement.SpaceEvenly) {
+            Key("7") { onChange(amount + "7") }
+            Key("8") { onChange(amount + "8") }
+            Key("9") { onChange(amount + "9") }
+        }
+
+        // Row 4
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+
+            Key("⌫") {
+                if (amount.isNotEmpty()) {
+                    onChange(amount.dropLast(1))
+                }
+            }
+
+            Key("0") {
+                onChange(amount + "0")
+            }
+            Key(".") {
+                onChange(amount + ".")
+            }
+
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Button(
+            onClick = onSave,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 8.dp, end = 8.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = colorBlue)
+        ) {
+            Text(
+                text = stringResource(R.string.SaveExpense),
+                color = Color.White,
+                fontSize = 22.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center)
+
+        }
+
+        Spacer(modifier = Modifier.height(22.dp))
+    }
+}
+
+@Composable
+fun Key(
+    text: String,
+    onClick: () -> Unit
+) {
+
+    Card(
+        modifier = Modifier
+            .padding(6.dp)
+            .size(70.dp)
+            .clickable { onClick() },
+                colors = CardDefaults.cardColors(
+                containerColor = Color.White
+                ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+
+        Box(contentAlignment = Alignment.Center,
+            modifier = Modifier.fillMaxSize()) {
+            Text(text = text, fontSize = 22.sp,  color = Color.Black,
+                textAlign = TextAlign.Center)
         }
     }
 }

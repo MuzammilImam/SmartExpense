@@ -9,5 +9,12 @@
     <string name="AddExpense">Add expense</string>
     <string name="Amount">Amount</string>
     <string name="category">Category</string>
+    <string name="SaveExpense">Save Expense</string>
+    <string name="Analytics">Analytics</string>
+    <string name="TotalSpent">Total spent</string>
+    <string name="TopCategory">Top category</string>
+    <string name="Transactions">Transactions</string>
+    <string name="AveragePerDay">Average per day</string>
+    <string name="Spendingbycategory">Spending by category</string>
 
 </resources>
